@@ -1,0 +1,21 @@
+apply plugin: 'java'
+
+group = "org.arhan"
+jar.baseName = 'transformer'
+version = 0.1
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.javassist:javassist:3.20.0-GA'
+}
+
+compileJava {
+    options.debug = true
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}
