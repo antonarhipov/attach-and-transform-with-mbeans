@@ -15,7 +15,7 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
-public class AgentInstaller {
+public class Main {
 
   /**
    * The created agent jar file name
@@ -45,7 +45,7 @@ public class AgentInstaller {
       for (int i = 0; i < 1000; i++) {
         person.sayHello(i);
         person.sayHello("String: " + (i * -1));
-        Thread.currentThread().join(5000);
+        Thread.sleep(3000);
       }
     } catch (Exception ex) {
       System.err.println("Agent Installation Failed. Stack trace follows...");
@@ -65,18 +65,18 @@ public class AgentInstaller {
         if (agentJar.get() == null) {
           FileOutputStream fos = null;
           try {
-            File tmpFile = File.createTempFile(AgentMain.class.getName(), ".jar");
+            File tmpFile = File.createTempFile(Agent.class.getName(), ".jar");
             System.out.println("Temp File:" + tmpFile.getAbsolutePath());
             tmpFile.deleteOnExit();
-            String manifest = ("Manifest-Version: 1.0\nAgent-Class: " + AgentMain.class.getName() + "\n") +
+            String manifest = ("Manifest-Version: 1.0\nAgent-Class: " + Agent.class.getName() + "\n") +
                 "Can-Redefine-Classes: true\n" +
                 "Can-Retransform-Classes: true\n" +
-                "Premain-Class: " + AgentMain.class.getName() + "\n";
+                "Premain-Class: " + Agent.class.getName() + "\n";
             ByteArrayInputStream bais = new ByteArrayInputStream(manifest.getBytes());
             Manifest mf = new Manifest(bais);
             fos = new FileOutputStream(tmpFile, false);
             JarOutputStream jos = new JarOutputStream(fos, mf);
-            addClassesToJar(jos, AgentMain.class, DemoTransformer.class, ModifyMethodTest.class, TransformerService.class, TransformerServiceMBean.class);
+            addClassesToJar(jos, Agent.class, DemoTransformer.class, ModifyMethodTest.class, TransformerService.class, TransformerServiceMBean.class);
             jos.flush();
             jos.close();
             fos.flush();
